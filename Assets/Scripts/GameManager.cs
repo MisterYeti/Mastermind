@@ -20,22 +20,28 @@ public class GameManager : MonoBehaviour
     }
 
     private Board _board;
-    private Checker _checker;
+    public Checker _checker;
+    private EndGame _endGame;
 
     public List<Answer> answers;
 
-    private int nbChoices = 4, nbColors = 6;
-    private int tryNumber = 0;
+    public int nbChoices = 4, nbColors = 6;
+    public int tryNumber = 0;
+    public bool hasWin = false;
 
     private void Start()
     {
         _board = FindObjectOfType<Board>();
         _checker = FindObjectOfType<Checker>();
+        _endGame = FindObjectOfType<EndGame>();
 
         if (Settings.Instance)
         {
-            _board.Instanciate(Settings.Instance.nbChoices, Settings.Instance.nbColors);
-            _checker.Initialize(Settings.Instance.nbChoices, Settings.Instance.nbColors,Settings.Instance.duplicat);
+            nbChoices = Settings.Instance.nbChoices;
+            nbColors = Settings.Instance.nbColors;
+
+            _board.Instanciate(nbChoices, nbColors);
+            _checker.Initialize(nbChoices, nbColors, Settings.Instance.duplicat);
         }
         else
         {
@@ -55,9 +61,17 @@ public class GameManager : MonoBehaviour
         if (tryNumber < 12)
         {
             answers[tryNumber].Fill(_board.GetRounds());
-            _checker.Fill(_board.GetCOLORS(), tryNumber);
+            hasWin = _checker.Fill(_board.GetCOLORS(), tryNumber);
 
             tryNumber += 1;
+        }
+        if (tryNumber >= 12 && !hasWin)
+        {
+            _endGame.InstanciateEndGame(hasWin);
+        }
+        if (hasWin)
+        {
+            _endGame.InstanciateEndGame(hasWin);
         }
     }
 

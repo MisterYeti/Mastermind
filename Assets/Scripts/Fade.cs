@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Fade : MonoBehaviour
 {
 
-    [SerializeField] CanvasGroup canvasToFadeIn;
-    [SerializeField] CanvasGroup canvasToFadeOut;
+    [SerializeField] CanvasGroup canvasToFadeIn = null;
+    [SerializeField] CanvasGroup canvasToFadeOut = null;
+
+    [SerializeField] Slider slider = null;
+    [SerializeField] GameObject goToDesac = null;
 
     [SerializeField] bool startScene = false;
 
@@ -20,6 +24,10 @@ public class Fade : MonoBehaviour
 
     }
 
+    public void FadeOut()
+    {
+        StartCoroutine(FadeOutCoroutine());
+    }
 
     public void FadeCanvases()
     {
@@ -75,6 +83,40 @@ public class Fade : MonoBehaviour
         canvasToFadeIn.blocksRaycasts = true;
     }
 
+    private IEnumerator FadeOutCoroutine()
+    {
+        
+        float currentTime = 0.0f;
+        float duration = 2.0f;
+        var start = 0.0f; var end = 1.0f;
+
+        while (currentTime < duration)
+        {
+            currentTime += Time.deltaTime;
+            var newVal = Mathf.Lerp(start, end, currentTime / duration);
+            slider.value = newVal;
+            yield return null;
+        }
+
+        slider.value = end;
+        goToDesac.SetActive(false);
+
+        currentTime = 0.0f;
+        duration = 1.0f;
+        start = 1.0f; end = 0.0f;
+       
+        while (currentTime < duration)
+        {
+            currentTime += Time.deltaTime;
+            var newVal = Mathf.Lerp(start, end, currentTime / duration);
+
+            canvasToFadeOut.alpha = newVal;
+            yield return null;
+        }
+        canvasToFadeOut.blocksRaycasts = false;
+        canvasToFadeOut.alpha = end;
+        
+    }
 
 
     private IEnumerator FadeAndPlayCoroutine(int scene)

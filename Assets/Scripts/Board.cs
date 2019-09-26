@@ -21,7 +21,6 @@ public class Board : MonoBehaviour
             choice.GetComponent<Choice>().vertical.GetComponent<ScrollSnapBase>().ChildObjects = new GameObject[nbProps];
 
             choices.Add(choice.GetComponent<Choice>());
-            Debug.Log(Mathf.Ceil(nbProps / 2));
             choice.GetComponent<Choice>().vertical.GetComponent<ScrollSnapBase>().StartingScreen = (int)(Mathf.Ceil(nbProps / 2));
 
 

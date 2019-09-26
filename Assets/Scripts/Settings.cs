@@ -10,46 +10,29 @@ public class Settings : MonoBehaviour
     {
         get
         {
-            if (_instance == null)
-            {
-                _instance = GameObject.FindObjectOfType<Settings>();
-            }
-
             return _instance;
         }
     }
 
-    public int nbChoices, nbColors;
-    public bool duplicat;
+    public int nbChoices = 4, nbColors = 6;
+    public bool duplicat = false;
 
-    [SerializeField] Slider _sliderLenght = null;
-    [SerializeField] Slider _sliderNumber = null;
-    [SerializeField] Toggle _toggle = null;
+   
 
 
     private void Awake()
-    {
-        DontDestroyOnLoad(this);
-        nbChoices = (int)_sliderLenght.value;
-        nbColors = (int)_sliderNumber.value;
-        duplicat = (bool)_toggle.isOn;
-    }
+    {    
+        if (Instance != null)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
 
-    public void OnValueChangedLenght(TMPro.TextMeshProUGUI text)
-    {
-        text.text = _sliderLenght.value.ToString();
-        nbChoices = (int)_sliderLenght.value;
-    }
 
-    public void OnValueChangedNumber(TMPro.TextMeshProUGUI text)
-    {
-        text.text = _sliderNumber.value.ToString();
-        nbColors = (int)_sliderNumber.value;
-
+        DontDestroyOnLoad(this);      
     }
-
-    public void OnValueTogglerChanged()
-    {
-        duplicat = _toggle.isOn;
-    }
+  
 }
